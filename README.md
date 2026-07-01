@@ -1,9 +1,9 @@
 # BHIV Executive Control Center
 
-> Internship Task — Data Science & AI Intern, **Blackhole Infiverse**
-> Sprint Task: *Executive Control Center Foundation (BHIV Executive Control Panel — Test 1)*
+> Internship Task - Data Science & AI Intern, **Blackhole Infiverse**
+> Sprint Task: *Executive Control Center Foundation (BHIV Executive Control Panel - Test 1)*
 
-A leadership-grade command center UI that brings operational monitoring, runtime intelligence, business KPIs, engineering metrics, and project execution into a single screen — built to answer **"is the company healthy?"** within 30 seconds of login.
+A leadership-grade command center UI that brings operational monitoring, runtime intelligence, business KPIs, engineering metrics, and project execution into a single screen - built to answer **"is the company healthy?"** within 30 seconds of login.
 
 ---
 
@@ -84,7 +84,7 @@ src/
 
 ## 🚀 Running Locally
 
-This component has no external data dependencies — everything is mock-generated client-side.
+This component has no external data dependencies - everything is mock-generated client-side.
 
 1. Drop `bhiv-executive-control-center.jsx` into a React project (Next.js, Vite, or CRA).
 2. Install dependencies:
@@ -128,4 +128,4 @@ BE Information Technology, Sinhgad Institutes, Pune
 
 ---
 
-*Submitted as part of internship Sprint Task: "Executive Control Center Foundation (BHIV)" — Due July 4, 2026.*
+*Submitted as part of internship Sprint Task: "Executive Control Center Foundation (BHIV)" - Due July 4, 2026.*
