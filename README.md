@@ -1,131 +1,95 @@
 # BHIV Executive Control Center
 
-> Internship Task - Data Science & AI Intern, **Blackhole Infiverse**
-> Sprint Task: *Executive Control Center Foundation (BHIV Executive Control Panel - Test 1)*
-
-A leadership-grade command center UI that brings operational monitoring, runtime intelligence, business KPIs, engineering metrics, and project execution into a single screen - built to answer **"is the company healthy?"** within 30 seconds of login.
-
----
-
-## 🎯 Objective
-
-BHIV leadership currently has to open multiple tools to understand the organization's real-time status. This project is the foundation of a unified **Executive Control Center**: a centralized, enterprise-grade dashboard inspired by products like Datadog, Linear, Stripe Dashboard, and Vercel — designed for CEOs, CXOs, Operations Heads, and Engineering Leaders.
-
-The deliverable is a fully interactive front-end foundation with realistic mock data, ready to be wired up to live data sources in a later phase.
+Internship task - Data Science & AI Intern, Blackhole Infiverse
+Sprint: Test 2 - Executive Control Center Command Layer
+Owner: Rahil Mulani
 
 ---
 
-## ✨ Key Features
+## Background
 
-This build covers all 9 sections defined in the project brief:
+This is built on top of Test 1. The repo is the same, the design system is the same, and the component structure carries forward. Test 2 adds a command layer on top of the visual foundation from Test 1.
 
-| Section | What it shows |
+The brief was pasted into Claude before any code was written. The execution plan it produced:
+
+1. Shift the primary view to live operational state - what is happening right now, not what happened last week. Charts move to the Business tab. The dashboard opens with incidents, approvals, and running operations front and center.
+2. Build a reusable command engine so every action in the system goes through the same lifecycle: confirm, execute, succeed or fail, audit. No action fires immediately without confirmation.
+3. Add a Command Panel (drawer), global search (Cmd+K), and a Situation Bar at the top of the dashboard so leadership can orient themselves in under 5 seconds.
+4. Wire up the Operations, Engineering, Business, Alerts, and Teams pages as real views, not placeholders.
+5. Write README, Architecture.md, FolderStructure.md, and REVIEW_PACKET.md.
+
+The clarifying questions it asked before building: single-file vs full Next.js app, and how much of the brief to cover in this pass. Both were answered in full scope, single-file for rapid preview.
+
+---
+
+## What changed from Test 1
+
+The main change is the primary view. Test 1 opened with revenue trend charts and KPI cards. That is a reporting dashboard - it shows what happened. Test 2 opens with what needs attention right now: open incidents, pending approvals, running operations, and live service health. Charts still exist but they live on the Business tab, which is where historical data belongs.
+
+The second change is every interactive element now has a real command lifecycle. Clicking Approve does not just dismiss a card. It opens a confirmation dialog, runs a mock service call, shows a progress state, records success or failure, writes an audit entry, and fires a notification. The same framework handles Reject, Acknowledge, Escalate, Pause, Stop, Restart, Silence, Generate Report, and Create Incident.
+
+---
+
+## Pages
+
+| Page | What it shows |
 |---|---|
-| **Executive Summary** | 8 KPI cards (revenue, MAU, active projects, incidents, uptime, deploy success, open issues, CSAT) with trend %, sparkline, and direction indicator |
-| **Operational Health** | Live status grid for 9 services (API, DB, Auth, Payments, Queue, etc.) with green/amber/red status and pulsing indicator on degraded services |
-| **Business Intelligence** | Revenue trend vs. target, user growth, retention vs. conversion, top products, regional distribution — all interactive Recharts visualizations |
-| **Engineering Dashboard** | Deployment frequency, latency percentiles (P50/P95/P99), code coverage, production error count |
-| **Sprint Execution** | Sprint progress bar, completed/pending/blocked task split, burn-down chart, upcoming releases |
-| **Critical Alerts** | Severity-filterable incident/alert feed (critical / warning / info) |
-| **Team Performance** | Cross-department productivity, completion, and efficiency comparison |
-| **Activity Timeline** | Unified audit trail — deployments, incidents, approvals, logins |
-| **Quick Actions** | One-click shortcuts for common executive actions (approve deployment, create incident, generate report, etc.) |
-
-Plus a full sidebar navigation shell for all 10 top-level areas (Dashboard, Operations, Engineering, Business, Projects, Analytics, Reports, Alerts, Teams, Settings), dark/light mode, and a live **System Pulse** indicator built into the top bar.
+| Dashboard | Situation Bar, open incidents, pending approvals, running ops, live service health, KPI snapshot, activity feed, quick actions |
+| Operations | Full service grid with Restart command, incident console, running ops, activity feed |
+| Engineering | Build state, latency charts, deployment frequency, sprint progress, burn-down, release schedule |
+| Business | Revenue trend, product mix, user growth, new signups - historical charts live here |
+| Alerts | Filterable alert console (critical / warning / info) with Silence command |
+| Teams | Department productivity, completion, and efficiency |
 
 ---
 
-## 🎨 Design Approach
+## Command surfaces
 
-Rather than a generic admin template, the visual language was deliberately built around the brief's own reference products (Datadog, Grafana, Linear, Stripe):
-
-- **Theme:** A deep "console-glass" slate background (`#0B0E14`) instead of pure black or a generic light template, evoking a real monitoring/observability tool.
-- **Typography:** `Sora` for display headings, `Inter` for body text, and `JetBrains Mono` for every numeric value — KPIs, latencies, timestamps, IDs — so data reads like telemetry rather than marketing copy.
-- **Color discipline:** Status colors (green / amber / red) are used **only** for functional health signals, never decoratively, keeping the interface calm and easy to scan under pressure.
-- **Signature element:** A live composite health sparkline ("System Pulse") embedded directly in the top bar chrome, tying system health into the navigation itself rather than burying it inside a card.
-
----
-
-## 🛠️ Tech Stack
-
-- **React** (functional components + hooks)
-- **Recharts** — Area, Bar, Line, and Pie/Donut charts
-- **lucide-react** — iconography
-- **Inline CSS-in-JS** with a centralized design-token system (palette, type scale, spacing)
-- **Mock data layer** — seeded pseudo-random generator producing realistic enterprise-style time series (no backend required)
-
-> Built and previewed as a single-file React component; can be dropped into any Next.js / Vite / CRA project as a page or top-level view.
+| Surface | Commands |
+|---|---|
+| Pending Approvals | Approve, Reject |
+| Active Incidents | Acknowledge, Escalate (with rollback option) |
+| Running Operations | Pause (with rollback), Stop |
+| Service Health | Restart Service (fails intentionally on Payment Service to show failure path) |
+| Alert Console | Silence (30 min) |
+| Quick Actions | Generate Report, Create Incident |
 
 ---
 
-## 📁 Project Structure
+## Tech stack
 
-```
-bhiv-executive-control-center.jsx   # Single-file foundation: layout, design tokens,
-                                     # mock data, and all 9 dashboard sections
-```
-
-The component is intentionally self-contained for this foundation phase. As the project grows, the natural next step is to split it into:
-
-```
-src/
-├── components/      # KpiCard, ChartCard, ServiceRow, AlertRow, etc.
-├── layouts/          # Sidebar, Topbar
-├── pages/            # Dashboard, Operations, Engineering, Business...
-├── charts/           # Recharts wrappers
-├── mockData/         # Generators currently inline in the foundation file
-├── hooks/
-├── services/
-├── types/
-└── constants/
-```
+- React with hooks and context
+- Recharts for all charts
+- lucide-react for icons
+- No external state library - four React contexts (Theme, Audit, Notifications, Panel)
+- Mock service layer with realistic latency, maps directly to future REST endpoints
 
 ---
 
-## 🚀 Running Locally
+## Running locally
 
-This component has no external data dependencies - everything is mock-generated client-side.
-
-1. Drop `bhiv-executive-control-center.jsx` into a React project (Next.js, Vite, or CRA).
+1. Copy `bhiv-ecc-test2.jsx` into a React project (Next.js, Vite, or CRA).
 2. Install dependencies:
-   ```bash
+   ```
    npm install recharts lucide-react
    ```
-3. Import and render the default export:
+3. Import and render:
    ```jsx
-   import ExecutiveControlCenter from "./bhiv-executive-control-center";
-
-   export default function Page() {
-     return <ExecutiveControlCenter />;
-   }
+   import ExecutiveControlCenter from "./bhiv-ecc-test2";
+   export default function Page() { return <ExecutiveControlCenter />; }
    ```
-4. Run the dev server as usual (`npm run dev`).
+4. Run the dev server.
 
 ---
 
-## 📌 Status
+## Note on Payment Service restart
 
-- [x] Executive Summary
-- [x] Operational Health
-- [x] Business Intelligence
-- [x] Engineering Dashboard
-- [x] Sprint Execution
-- [x] Critical Alerts (with severity filtering)
-- [x] Team Performance
-- [x] Activity Timeline
-- [x] Quick Actions
-- [x] Dark / Light mode
-- [ ] Live data integration (API / backend wiring)
-- [ ] Dedicated detail views for non-Dashboard sidebar tabs
+The Payment Service restart command intentionally returns an error. This is to demonstrate the failure path in the command lifecycle - the dialog shows the error message, and a Retry button appears. This is not a bug.
 
 ---
 
-## 👤 Author
+## Author
 
-**Rahil Mulani**
+Rahil Mulani
 Data Science & AI Intern, Blackhole Infiverse
 BE Information Technology, Sinhgad Institutes, Pune
-
----
-
-*Submitted as part of internship Sprint Task: "Executive Control Center Foundation (BHIV)" - Due July 4, 2026.*
